@@ -21,8 +21,13 @@
         limitations under the License.
     "/>
     <script src="json2.js"></script>
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1615799998603-7c6270a45196?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=704&q=80');
+        }
+    </style>
   </head> 
-  <body bgcolor="black" height="100%" width="100%"> 
+  <body backheight="100%" width="100%"> 
     <canvas id="c" width="100%" height="100%" style="-webkit-tap-highlight-color: transparent;"></canvas> 
     <script>
 var canvas = document.getElementById('c');
@@ -54,7 +59,7 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
 
 
 world = {};
-
+    
 //XXX: TODO Make this prettier!
 function drawCircle(context,entity) {
     with(context) {
@@ -65,7 +70,8 @@ function drawCircle(context,entity) {
         //moveTo(x,y);
         fillStyle = entity["colour"];
         strokeStyle = fillStyle;
-        arc(x, y, (entity["radius"])?entity["radius"]:50, 0, 2.0 * Math.PI, false);  
+        //default radius 20 
+        arc(x, y, (entity["radius"])?entity["radius"]:20, 0, 2.0* Math.PI, false);  
         stroke();                                
     }
 }
@@ -74,8 +80,9 @@ function prepEntity(entity) {
     if (!entity["colour"]) {
         entity["colour"] = "#FF0000";
     }
+    //default radius 20 
     if (!entity["radius"]) {
-        entity["radius"] = 50;
+        entity["radius"] = 20;
     }
     return entity;
 }
@@ -247,22 +254,27 @@ mouse = (function() {
 // Add the application specific mouse listeners!
 //XXX: TODO Make these prettier!
 mouse.mousedowners.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'blue'});
+    addEntityWithoutName({'x':x,'y':y,'colour':'#f7c202'
+});
 });
 
 mouse.mouseuppers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'red'});
+    addEntityWithoutName({'x':x,'y':y,'colour':'#eb4034','radius': 20
+});
 });
 
 mouse.mousedraggers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'green',
-                        'radius':10});
+    addEntityWithoutName({'x':x,'y':y,'colour':'#00ffff',
+                        'radius':1});
 });
 
 
 function update() {
     //XXX: TODO Get the world from the webservice using a XMLHTTPRequest
-    sendJSONXMLHTTPRequest('/world', null, (res)=>{world=res });
+    sendJSONXMLHTTPRequest('/world', null, (res)=>{
+        world=res;
+        drawNextFrame();
+    });
     drawFrame();
 }
 
